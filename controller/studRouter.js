@@ -17,5 +17,30 @@ route.post("/signup",async(req,res)=>{
     res.json({status:"success"})
 })
 
+route.post("/signin",async(req,res)=>{
+    let input=req.body
+    let email=req.body.email
+    let data=await studmodel.findOne({"email":email})
+
+    if(!data)
+    {
+        return res.json({status:"incorrect email id"})
+    }
+
+    console.log(data)
+    let dbPassword=data.password
+    let inputPassword=req.body.password
+
+    const match=await bcrypt.compare(inputPassword,dbPassword)
+
+    if(!match)
+    {
+        return res.json({status:"incorrect password"})
+    }
+
+    res.json({status:"success"})
+
+})
+
 
 module.exports=route
